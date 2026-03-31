@@ -1,21 +1,23 @@
-cd /content/tdesktop
-mkdir -p .github/workflows
-
-cat > .github/workflows/build-windows.yml <<'YAML'
 name: Build AyuGram Windows
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - plugin-loader-work
 
 jobs:
   build:
     runs-on: windows-2022
 
     steps:
-      - name: Checkout
+      - name: Checkout source branch
         uses: actions/checkout@v4
         with:
+          repository: nullpointerexceptionnullpointe-maker/AyuGramDesktop
+          ref: plugin-loader-work
           submodules: recursive
+          fetch-depth: 1
 
       - name: Setup Python 3.10
         uses: actions/setup-python@v5
@@ -24,6 +26,14 @@ jobs:
 
       - name: Enable MSBuild
         uses: microsoft/setup-msbuild@v2
+
+      - name: Verify files
+        shell: cmd
+        run: |
+          dir
+          dir Telegram
+          dir Telegram\build
+          dir Telegram\build\prepare
 
       - name: Prepare dependencies
         shell: cmd
@@ -46,4 +56,3 @@ jobs:
         with:
           name: AyuGram-Windows-Debug
           path: out\Debug\*
-YAML
