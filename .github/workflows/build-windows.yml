@@ -24,31 +24,34 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Enable MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Verify files
+      - name: Locate Visual Studio
         shell: cmd
         run: |
-          dir
-          dir Telegram
-          dir Telegram\build
-          dir Telegram\build\prepare
+          where vswhere
+          vswhere -latest -products * -property installationPath
 
-      - name: Prepare dependencies
+      - name: Prepare dependencies in VS dev shell
         shell: cmd
         run: |
+          for /f "usebackq delims=" %%i in (`vswhere -latest -products * -property installationPath`) do set VSROOT=%%i
+          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -host_arch=x64 -arch=x64
+          cd /d "%GITHUB_WORKSPACE%"
           Telegram\build\prepare\win.bat
 
-      - name: Configure
+      - name: Configure in VS dev shell
         shell: cmd
         run: |
-          cd Telegram
+          for /f "usebackq delims=" %%i in (`vswhere -latest -products * -property installationPath`) do set VSROOT=%%i
+          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -host_arch=x64 -arch=x64
+          cd /d "%GITHUB_WORKSPACE%\Telegram"
           configure.bat x64 -D TDESKTOP_API_ID=2040 -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627
 
-      - name: Build Debug
+      - name: Build Debug in VS dev shell
         shell: cmd
         run: |
+          for /f "usebackq delims=" %%i in (`vswhere -latest -products * -property installationPath`) do set VSROOT=%%i
+          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -host_arch=x64 -arch=x64
+          cd /d "%GITHUB_WORKSPACE%"
           msbuild out\Telegram.sln /p:Configuration=Debug /p:Platform=x64 /m
 
       - name: Upload Debug artifact
