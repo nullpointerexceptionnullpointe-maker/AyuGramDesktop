@@ -1,0 +1,47 @@
+name: Build AyuGram Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - plugin-loader-work
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Enable MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Prepare dependencies
+        shell: cmd
+        run: |
+          Telegram\build\prepare\win.bat
+
+      - name: Configure
+        shell: cmd
+        run: |
+          cd Telegram
+          configure.bat x64 -D TDESKTOP_API_ID=2040 -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627
+
+      - name: Build Debug
+        shell: cmd
+        run: |
+          msbuild out\Telegram.sln /p:Configuration=Debug /p:Platform=x64 /m
+
+      - name: Upload Debug artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AyuGram-Windows-Debug
+          path: out\Debug\*
