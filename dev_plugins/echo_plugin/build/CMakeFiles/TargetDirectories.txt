@@ -1,0 +1,3 @@
+/content/tdesktop/dev_plugins/echo_plugin/build/CMakeFiles/echo_plugin.dir
+/content/tdesktop/dev_plugins/echo_plugin/build/CMakeFiles/edit_cache.dir
+/content/tdesktop/dev_plugins/echo_plugin/build/CMakeFiles/rebuild_cache.dir
