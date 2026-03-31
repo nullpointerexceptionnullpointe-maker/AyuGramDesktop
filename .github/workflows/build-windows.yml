@@ -1,3 +1,7 @@
+cd /content/tdesktop
+mkdir -p .github/workflows
+
+cat > .github/workflows/build-windows.yml <<'YAML'
 name: Build AyuGram Windows
 
 on:
@@ -21,12 +25,6 @@ jobs:
       - name: Enable MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Show VS tools
-        shell: cmd
-        run: |
-          where msbuild
-          python --version
-
       - name: Prepare dependencies
         shell: cmd
         run: |
@@ -48,3 +46,4 @@ jobs:
         with:
           name: AyuGram-Windows-Debug
           path: out\Debug\*
+YAML
