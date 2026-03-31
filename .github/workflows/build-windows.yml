@@ -24,33 +24,34 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Locate Visual Studio
-        shell: cmd
-        run: |
-          where vswhere
-          vswhere -latest -products * -property installationPath
+      - name: Setup MSVC dev cmd
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
 
-      - name: Prepare dependencies in VS dev shell
+      - name: Show environment
         shell: cmd
         run: |
-          for /f "usebackq delims=" %%i in (`vswhere -latest -products * -property installationPath`) do set VSROOT=%%i
-          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -host_arch=x64 -arch=x64
+          echo VSCMD_ARG_TGT_ARCH=%VSCMD_ARG_TGT_ARCH%
+          echo Platform=%Platform%
+          where cl
+          where msbuild
+
+      - name: Prepare dependencies
+        shell: cmd
+        run: |
           cd /d "%GITHUB_WORKSPACE%"
           Telegram\build\prepare\win.bat
 
-      - name: Configure in VS dev shell
+      - name: Configure
         shell: cmd
         run: |
-          for /f "usebackq delims=" %%i in (`vswhere -latest -products * -property installationPath`) do set VSROOT=%%i
-          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -host_arch=x64 -arch=x64
           cd /d "%GITHUB_WORKSPACE%\Telegram"
           configure.bat x64 -D TDESKTOP_API_ID=2040 -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627
 
-      - name: Build Debug in VS dev shell
+      - name: Build Debug
         shell: cmd
         run: |
-          for /f "usebackq delims=" %%i in (`vswhere -latest -products * -property installationPath`) do set VSROOT=%%i
-          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -host_arch=x64 -arch=x64
           cd /d "%GITHUB_WORKSPACE%"
           msbuild out\Telegram.sln /p:Configuration=Debug /p:Platform=x64 /m
 
