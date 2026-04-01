@@ -8,7 +8,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #pragma once
 
 #include "api/api_common.h"
-#include "plugins/plugin_manager.h"
 #include "base/timer.h"
 #include "mtproto/sender.h"
 #include "data/stickers/data_stickers_set.h"
@@ -171,19 +170,7 @@ public:
 		not_null<HistoryItem*> item,
 		bool inRepliesContext,
 		bool forceNonPublicLink = false,
-		std::optional<TimeId> videoTimestamp = {
-    {
-        AyuEvent __ayu_ev{};
-        __ayu_ev.type = AYU_EVENT_MESSAGE_RECEIVED;
-        __ayu_ev.message.chat_id = 0;
-        __ayu_ev.message.sender_id = 0;
-        __ayu_ev.message.message_id = 0;
-        __ayu_ev.message.text_utf8 = nullptr;
-        __ayu_ev.message.is_outgoing = 0;
-        __ayu_ev.message.is_edited = 0;
-        PluginManager::instance().emitEvent(__ayu_ev);
-    }
-});
+		std::optional<TimeId> videoTimestamp = {});
 	QString exportDirectStoryLink(not_null<Data::Story*> item);
 
 	void requestContacts();

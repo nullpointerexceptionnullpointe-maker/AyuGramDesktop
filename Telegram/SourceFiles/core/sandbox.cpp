@@ -7,7 +7,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "core/sandbox.h"
 
-#include "plugins/plugin_manager.h"
 #include "base/platform/base_platform_info.h"
 #include "platform/platform_specific.h"
 #include "mainwidget.h"
@@ -143,9 +142,7 @@ int Sandbox::start() {
 		return 0;
 	}
 	_started = true;
-	
-	PluginManager::instance().loadAll(qApp->applicationDirPath() + "/plugins");
-return exec();
+	return exec();
 }
 
 void Sandbox::QuitWhenStarted() {

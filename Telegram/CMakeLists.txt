@@ -2441,11 +2441,3 @@ if (LINUX AND DESKTOP_APP_USE_PACKAGED)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/com.ayugram.desktop.service" DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/dbus-1/services")
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/com.ayugram.desktop.metainfo.xml" DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/metainfo")
 endif()
-
-
-# --- AyuGram plugin loader sources ---
-# Add these source files to the appropriate target if they are not already included:
-#   Telegram/SourceFiles/plugins/plugin_manager.cpp
-# and ensure include path contains:
-#   Telegram/SourceFiles
-
